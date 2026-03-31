@@ -1,0 +1,12 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="80" fill="#FFFDE7" rx="8"/>
+  <!-- Triangle icon -->
+  <polygon points="40,8 60,42 20,42" fill="#C6FF00"/>
+  <polygon points="40,16 55,40 25,40" fill="#2E7D32"/>
+  <!-- Brand text -->
+  <text x="70" y="28" font-family="Arial, sans-serif" font-size="14" font-weight="800" fill="#1B5E20" letter-spacing="1">ARTHA SATHI</text>
+  <text x="70" y="44" font-family="Arial, sans-serif" font-size="9" font-weight="400" fill="#2E7D32" letter-spacing="3">ADVISORY</text>
+  <!-- Tagline -->
+  <text x="70" y="62" font-family="Arial, sans-serif" font-size="8" fill="#5a6a5a">Financial &amp; Tax Solutions</text>
+</svg>
