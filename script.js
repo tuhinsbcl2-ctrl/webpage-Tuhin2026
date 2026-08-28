@@ -17,7 +17,10 @@
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
 
-  /* ─────────────────────────────────────────────
+  // Google Apps Script Web App URL
+  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAZihtZTLFbdEX6REhqzYD16NDLXAD7gMyn-MRKNopyOd4NS9A3JEr2qpij9x2uox5vw/exec';
+
+  /* ──��──────────────────────────────────────────
      2. Sticky Navbar + Active Link on Scroll
   ───────────────────────────────────────────── */
   const SCROLL_THRESHOLD = 80;
@@ -128,11 +131,12 @@
   }
 
   /* ─────────────────────────────────────────────
-     6. Contact Form Validation
+     6. Contact Form Validation & Submission
   ───────────────────────────────────────────── */
   if (contactForm) {
     var nameInput    = document.getElementById('name');
     var emailInput   = document.getElementById('email');
+    var phoneInput   = document.getElementById('phone');
     var messageInput = document.getElementById('message');
     var nameError    = document.getElementById('nameError');
     var emailError   = document.getElementById('emailError');
@@ -184,23 +188,50 @@
 
       if (!valid) return;
 
-      /* Simulate form submission */
+      /* Show loading state */
       var submitBtn = contactForm.querySelector('button[type="submit"]');
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Sending…';
       }
 
-      setTimeout(function () {
-        if (formSuccess) {
-          formSuccess.textContent = '✅ Thank you! Your message has been received. We will get back to you shortly.';
+      /* Prepare form data */
+      const formData = new URLSearchParams();
+      formData.append('name', nameInput.value.trim());
+      formData.append('email', emailInput.value.trim());
+      formData.append('phone', phoneInput ? phoneInput.value.trim() : '');
+      formData.append('message', messageInput.value.trim());
+
+      /* Send data to Google Apps Script */
+      fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          if (formSuccess) {
+            formSuccess.textContent = '✅ Thank you! Your message has been received. We will get back to you shortly.';
+          }
+          contactForm.reset();
+        } else {
+          if (formSuccess) {
+            formSuccess.textContent = '⚠️ There was an error. Please try again.';
+          }
         }
-        contactForm.reset();
+      })
+      .catch(error => {
+        console.error('Form submission error:', error);
+        if (formSuccess) {
+          formSuccess.textContent = '⚠️ There was an error. Please try again.';
+        }
+      })
+      .finally(() => {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = '<i class="fas fa-paper-plane" aria-hidden="true"></i> Send Message';
         }
-      }, 1500);
+      });
     });
   }
 
